@@ -1,60 +1,87 @@
-# Which is the fastest?
+# Which is the fastest ?
+----------
+#### Simple framework comparison
+----------
+<p align="center">
+   <a href="https://github.com/the-benchmarker/web-frameworks/actions?query=workflow%3ACI" target="_blank">
+      <img src="https://github.com/the-benchmarker/web-frameworks/workflows/CI/badge.svg" alt="Test">
+   </a>
+   <a href="https://join.slack.com/t/thebenchmarker/shared_invite/zt-fcyy1ybq-A7T1SedewiVMEtJQGEyQYw" target="_blank">
+      <img src="https://img.shields.io/badge/slack-chat_with_us-green" alt="Chat with us">
+   </a>
+   <a href="https://github.com/the-benchmarker/web-frameworks/blob/master/LICENSE" target="_blank">
+      <img src="https://img.shields.io/github/license/the-benchmarker/web-frameworks" alt="License">
+   </a>
+</p>
 
-![CI](https://github.com/the-benchmarker/web-frameworks/workflows/CI/badge.svg)
+## Motivation
 
-[![Chat with US](https://img.shields.io/badge/slack-Chat_with_us-blueviolet)](https://thebenchmarker.slack.com)
+It exists plenty of frameworks. Each one has its advantages, and drawbacks. The idea of this project is to list those frameworks and to expose metrics for each one listed `here` (performance is only the first one)
 
-This project aims to be a load benchmarking suite, no more, no less
+#### What is a framewok ?
 
-> Measuring response times (routing times) for each framework (middleware).
-
-
-<div align="center">
-:warning::warning::warning::warning::warning::warning::warning::warning:
-</div>
-
-<div align="center">Results are not <b>production-ready</b> <i>yet</i></div>
-
-<div align="center">
-:warning::warning::warning::warning::warning::warning::warning::warning:
-</div>
-
-### Additional purposes :
-
-+ Helping decide between languages, depending on use case
-+ Learning languages, best practices, devops culture ...
-+ Having fun :heart:
+A framework is a set of components working together. There is a **huge** variety of frameworks, from full-stack (when deling with multiple layers) to micro (when providing only routing part)
 
 ## Requirements
 
-+ [Ruby](https://ruby-lang.org) as `built-in` tools are made in this language
-+ [Docker](https://www.docker.com) as **frameworks** are `isolated` into _containers_
-+ [wrk](https://github.com/wg/wrk) as benchmarking tool, `>= 4.1.0`
-+ [postgresql](https://www.postgresql.org) to store data, `>= 10`
-
-:information_source::information_source::information_source::information_source::information_source:
-
-:warning: On `OSX` you need `docker-machine` to use `docker` containerization
-
-~~~
-brew install docker-machine
-docker-machine create default
-eval $(docker-machine env default)
-~~~
-
-:information_source::information_source::information_source::information_source::information_source:
++ `ruby`, all tools are made in `ruby`
++ `wrk`, results are collected using `wrk`
++ `postgresql`, results are stored in `postgresql`
++ `docker`, each implementation is implemented in an isolated **container**
++ `docker-machine` if you are on `macos`
 
 ## Usage
 
-... to be documented ...
++ Setup
 
-feel free to create an issue if you want to try this project
+```
+bundle install
+bundle exec rake config
+```
 
-## Results
++ Build
 
-:information_source:  Updated on **2021-01-23** :information_source:
+:warning: On `macos`, you need to use `docker-machine` to allow `docker` usage for each framework :warning:
 
-> Benchmarking with [wrk](https://github.com/wg/wrk)
+```
+docker-machine rm default --force
+docker-machine create default
+eval $(docker-machine env default)
+```
+
+```
+export FRAMEWORK=php/lumen
+cd ${FRAMEWORK} 
+make -f .Makefile build 
+```
+
++ Run
+
+```
+make -f ${FRAMEWORK}/.Makefile collect
+```
+
+:warning: You need to be on the project main directory :warning:
+
+## Results (2021-01-24)
+
+
+
+<details>
+  <summary><strong>Technical details</strong></summary>
+  <ul>
+   <li>CPU : 8 Cores (AMD FX-8320E Eight-Core Processor)</li>
+   <li>RAM : 16 Gb</li>
+   <li>OS : Fedora</li>
+   <li><pre>Docker version 20.10.0-rc1, build 5cc2396
+</pre></li>
+  </ul>
+</details>
+
+<details>
+  <summary><strong>Datatable</strong></summary>
+
+> Computed with [wrk](https://github.com/wg/wrk)
    + Threads : 8
    + Timeout : 8
    + Duration : 15s (seconds)
@@ -257,7 +284,7 @@ feel free to create an issue if you want to try this project
 | 192 | v (0.1)| [vape](https://github.com/exastencil/vape) (0.3) | 4 164.45 | 2 268.26 | 2 267.63 |
 | 193 | php (7.4)| [bearframework](https://github.com/bearframework/bearframework) (1.3) | 3 956.47 | 3 899.55 | 3 886.76 |
 | 194 | php (7.4)| [nette](https://nette.org/en/) (3.1) | 3 862.24 | 3 853.15 | 3 866.96 |
-| 195 | php (7.4)| [lumen](https://lumen.laravel.com) (8.1) | 3 827.48 | 3 836.92 | 3 863.93 |
+| 195 | php (7.4)| [lumen](https://lumen.laravel.com) (8.1) | 3 830.03 | 3 837.93 | 3 859.82 |
 | 196 | julia (1.6)| [merly](https://github.com/codeneomatrix/Merly.jl) (0.2) | 3 791.22 | 6 792.09 | 5 757.87 |
 | 197 | php (7.4)| [sunrise-router](https://github.com/sunrise-php/http-router) (2.5) | 3 780.90 | 3 722.21 | 3 722.77 |
 | 198 | php (7.4)| [chubbyphp](https://github.com/chubbyphp/chubbyphp-framework) (3.4) | 3 423.68 | 3 396.54 | 3 386.92 |
@@ -284,19 +311,4 @@ feel free to create an issue if you want to try this project
 | 219 | r (4.0)| [plumber](https://rplumber.io) (1.0) | 287.60 | 302.64 | -86.01 |
 | 220 | cpp (11)| [nawa](https://github.com/jatofg/nawa) (0.6) | 265.70 | NaN | NaN |
 
-## How to contribute ?
-
-In any way you want ...
-
-+ Request a framework addition
-+ Report a bug (on any implementation)
-+ Suggest an idea
-+ ...
-
-Any kind of idea is :heart:
-
-## Contributors
-
-- [Taichiro Suzuki](https://github.com/tbrand) - Author | Maintainer
-- [OvermindDL1](https://github.com/OvermindDL1) - Maintainer
-- [Marwan Rabbâa](https://github.com/waghanza) - Maintainer
+</details>
